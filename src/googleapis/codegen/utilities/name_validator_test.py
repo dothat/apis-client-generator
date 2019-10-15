@@ -14,11 +14,11 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
-
 """Tests for name_validator.py."""
 
-__author__ = 'wclarkso@google.com (Will Clarkson)'
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from google.apputils import basetest
 from googleapis.codegen.utilities import name_validator
@@ -29,14 +29,14 @@ class NameValidatorTest(basetest.TestCase):
   def testVariableNameValidator(self):
     good_names = ['$ref', '_a', '_private', 'a_var.name', 't1', 'max-results',
                   'slashes/are/allowed', '/even/at/the/start/and/end/',
-                  'now_valid.', '@foo']
+                  'now_valid.', '@foo', 'foo$bar']
     bad_names = ['$', '1st_result', '^test', '.variable', '1', '_', 'no spaces',
                  'foo@']
 
     for varname in good_names:
       name_validator.Validate(varname)
     for varname in bad_names:
-      print "'%s'" % varname
+      print("'%s'" % varname)
       self.assertRaises(name_validator.ValidationError,
                         name_validator.Validate, varname)
 
@@ -48,7 +48,7 @@ class NameValidatorTest(basetest.TestCase):
     for varname in good_names:
       name_validator.ValidateApiName(varname)
     for varname in bad_names:
-      print "'%s'" % varname
+      print("'%s'" % varname)
       self.assertRaises(name_validator.ValidationError,
                         name_validator.ValidateApiName, varname)
 
@@ -59,7 +59,7 @@ class NameValidatorTest(basetest.TestCase):
     for varname in good_names:
       name_validator.ValidateApiVersion(varname)
     for varname in bad_names:
-      print "'%s'" % varname
+      print("'%s'" % varname)
       self.assertRaises(name_validator.ValidationError,
                         name_validator.ValidateApiVersion, varname)
 
@@ -89,13 +89,12 @@ class NameValidatorTest(basetest.TestCase):
                        name_validator.ValidateAndSanitizeComment(comment))
 
   def testUtf8InComment(self):
-    comment = 'Base64-encoded (RFC 4648 §5) data.'
-    unicode_comment = comment.decode('utf-8')
-    self.assertEqual(unicode_comment,
+    comment = u'Base64-encoded (RFC 4648 §5) data.'
+    self.assertEqual(comment,
                      name_validator.ValidateAndSanitizeComment(comment))
     self.assertEqual(
-        unicode_comment,
-        name_validator.ValidateAndSanitizeComment(unicode_comment))
+        comment,
+        name_validator.ValidateAndSanitizeComment(comment))
 
 
 if __name__ == '__main__':
