@@ -40,6 +40,10 @@ const {{ authscope.name }} =
     $this->servicePath = {% literal api.servicePath %};
     $this->version = {% literal api.version %};
     $this->serviceName = {% literal api.name %};
+    $this->init();
+  }
+
+  public function init() {
 
 {% filter noblanklines %}
 {% call_template _resource_decl resource=api %}
